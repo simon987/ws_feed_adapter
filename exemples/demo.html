@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ws_feed_adapter Demo</title>
+</head>
+<body>
+
+<script>
+let socket = new WebSocket("ws://localhost:3090/socket");
+
+socket.onmessage = function(msg) {
+
+    let j = JSON.parse(msg.data);
+    console.log(j)
+};
+
+socket.onopen = function() {
+    socket.send(JSON.stringify({
+        exchange: "reddit",
+        topics: [
+            "submission.*",
+        ]
+    }))
+};
+
+socket.onerror = function (err) {
+    console.log(err)
+}
+
+</script>
+</body>
+</html>
