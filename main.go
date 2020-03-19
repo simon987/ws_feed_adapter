@@ -5,7 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 	"github.com/streadway/amqp"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 	"log"
 	"net/http"
 	"os"
@@ -28,24 +28,30 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "ws_feed_adapter"
 	app.Usage = "Expose RabbitMQ feed to websocket"
-	app.Email = "me@simon987.net"
-	app.Author = "simon987"
 	app.Version = "1.0"
+	app.Authors = []*cli.Author{
+		{
+			Name:  "simon987",
+			Email: "me@simon987.net",
+		},
+	}
 
 	var listenAddr string
 
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:        "rabbitmq_host",
 			Usage:       "RabbitMQ Host",
 			Destination: &serverCtx.rabbitmqHost,
 			Value:       "amqp://guest:guest@localhost:5672/",
+			EnvVars:     []string{"WSA_MQ_CONNSTR"},
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:        "listen, l",
 			Usage:       "Listen address",
 			Destination: &listenAddr,
-			Value:       "localhost:3090",
+			Value:       "0.0.0.0:3090",
+			EnvVars:     []string{"WSA_LISTEN"},
 		},
 	}
 
